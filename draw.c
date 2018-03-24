@@ -274,6 +274,22 @@ void add_edge( struct matrix * points,
   add_point( points, x1, y1, z1 );
 }
 
+/*======== void add_triangle() ==========
+Inputs:   struct matrix * points
+          int x0, int y0, int z0, int x1, int y1, int z1, int x2, int y2, int z2
+Returns: 
+add the triangle connecting (x0, y0, z0), (x1, y1, z1), and (x2, y2, z2) to points
+should use add_point
+====================*/
+void add_triangle( struct matrix * points, 
+                   double x0, double y0, double z0, 
+                   double x1, double y1, double z1,
+                   double x2, double y2, double z2) {
+  add_point( points, x0, y0, z0 );
+  add_point( points, x1, y1, z1 );
+  add_point( points, x2, y2, z2 );
+}
+
 /*======== void draw_lines() ==========
 Inputs:   struct matrix * points
          screen s
@@ -298,13 +314,40 @@ void draw_lines( struct matrix * points, screen s, color c) {
 	      s, c);	       
 }// end draw_lines
 
+/*======== void draw_triangles() ==========
+Inputs:   struct matrix * points
+         screen s
+         color c 
+Returns: 
+Go through points 3 at a time and call draw_line to add that line
+to the screen
+====================*/
+void draw_triangles( struct matrix * points, screen s, color c) {
 
-
-
-
-
-
-
+ if ( points->lastcol < 3 ) {
+   printf("Need at least 3 points to draw a triangle!\n");
+   return;
+ }
+ 
+ int point;
+ for (point=0; point < points->lastcol-2; point+=3) {
+   draw_line( points->m[0][point],
+              points->m[1][point],
+              points->m[0][point+1],
+              points->m[1][point+1],
+              s, c);
+   draw_line( points->m[0][point+1],
+              points->m[1][point+1],
+              points->m[0][point+2],
+              points->m[1][point+2],
+              s, c);
+   draw_line( points->m[0][point+2],
+              points->m[1][point+2],
+              points->m[0][point],
+              points->m[1][point],
+              s, c);
+ }
+}// end draw_lines
 
 void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
   
