@@ -148,7 +148,6 @@ void add_sphere( struct matrix * edges,
         if (lat >= latStop-1) {
             p2 = latStart + longt;
         }
-        printf("%d, %d\n", index, step);
         add_polygon( edges,
                      points->m[0][index],
                      points->m[1][index],
@@ -235,18 +234,27 @@ void add_torus( struct matrix * edges,
   latStart = 0;
   latStop = step;
   longStart = 0;
-  longStop = step;
+  longStop = step-1;
 
   for ( lat = latStart; lat < latStop; lat++ ) {
     for ( longt = longStart; longt < longStop; longt++ ) {
 
-      index = lat * step + longt;
-      add_edge( edges, points->m[0][index],
-                points->m[1][index],
-                points->m[2][index],
-                points->m[0][index] + 1,
-                points->m[1][index] + 1,
-                points->m[2][index] + 1);
+        index = lat * step + longt;
+        int p2 = index + step;
+
+        if (lat >= latStop-1) {
+            p2 = latStart + longt;
+        }
+        add_polygon( edges,
+                     points->m[0][index],
+                     points->m[1][index],
+                     points->m[2][index],
+                     points->m[0][index+1],
+                     points->m[1][index+1],
+                     points->m[2][index+1],
+                     points->m[0][p2],
+                     points->m[1][p2],
+                     points->m[2][p2]);
     }
   }
   free_matrix(points);
